@@ -11,7 +11,7 @@ I'm a software engineer at [Zup](https://zup.com.br/), working as developer who 
 Golang, Java, Kubernetes, Cloud Native and Microservices
 
 ## Talks
-I like talk about the technology that I work with. 
+I like to share my experiences and learnings about the technology. 
 My latest public talks are listed below.
 
 ### 2020

@@ -11,7 +11,7 @@ Eu sou engenheiro de software na [Zup](https://zup.com.br/), trabalhando como de
 Golang, Java, Kubernetes, Cloud Native e Microsserviços
 
 ## Talks
-Eu gosto de compartilhar experiência e conhecimento sobre as tecnologias que trabalho. 
+Eu gosto de compartilhar experiências e aprendizados sobre tecnologia.
 As minhas últimas apresentações públicas estão listadas abaixo.
 
 ### 2020
