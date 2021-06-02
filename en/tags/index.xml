@@ -1,8 +1,0 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-    <channel>
-        <title>Tags - Tag - matheusfm</title>
-        <link>https://matheusfm.dev/en/tags/</link>
-        <description>Tags - Tag - matheusfm</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>matheusfaria.moraes@gmail.com (Matheus de Faria Moraes)</managingEditor>
-            <webMaster>matheusfaria.moraes@gmail.com (Matheus de Faria Moraes)</webMaster><atom:link href="https://matheusfm.dev/en/tags/" rel="self" type="application/rss+xml" /></channel>
-</rss>
