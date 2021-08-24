@@ -11,7 +11,7 @@ I'm a software engineer at [Zup](https://zup.com.br/), working as developer who 
 Golang, Java, Kubernetes, Cloud Native and Microservices
 
 ## Talks
-I like to share my experiences and learnings about the technology. 
+I like to share my experiences and learnings about technology. 
 My latest public talks are listed below.
 
 ### 2020
@@ -26,7 +26,7 @@ My latest public talks are listed below.
 - [:movie_camera: Recording (:uk:)](https://youtu.be/Rr-eUjuNsT0)
 - [:movie_camera: Recording (:es:)](https://youtu.be/55o2dlPla5Q)
 
-**Observability before and after Service Mesh** - [TDC Recife](https://thedevconf.com/tdc/2019/recife/trilha-arquitetura), [TDC Porto Alegre](https://thedevconf.com/tdc/2019/portoalegre/trilha-containers) and [GDG Campinas](https://www.meetup.com/gdgcampinas/)
+**Observability before and after the Service Mesh** - [TDC Recife](https://thedevconf.com/tdc/2019/recife/trilha-arquitetura), [TDC Porto Alegre](https://thedevconf.com/tdc/2019/portoalegre/trilha-containers) and [GDG Campinas](https://www.meetup.com/gdgcampinas/)
 - [:page_with_curl: Slides](https://speakerdeck.com/matheusfm/observability-before-and-after-service-mesh)
 - [:movie_camera: Recording (:brazil:)](https://youtu.be/5iYHqDEA8Fw?t=2549)
 
