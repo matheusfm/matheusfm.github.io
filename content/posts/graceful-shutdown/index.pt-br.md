@@ -67,7 +67,7 @@ Mas pode ser necessário fechar conexões com banco de dados, [redis](https://re
 
 ## Go
 
-{{< gist matheusfm 3e66745244ae7c0c888e51c3eacc59a2 "graceful.go" >}}
+{{< gist matheusfm 3e66745244ae7c0c888e51c3eacc59a2 "stdlib.go" >}}
 
 ## Kubernetes
 
