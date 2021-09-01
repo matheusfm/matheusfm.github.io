@@ -4,6 +4,10 @@ languageCode: "pt-br"
 theme: "LoveIt"
 title: "matheusfm"
 enableEmoji: true
+markup:
+  highlight:
+    lineNos: true
+    noClasses: false
 
 languages:
   pt-br:
