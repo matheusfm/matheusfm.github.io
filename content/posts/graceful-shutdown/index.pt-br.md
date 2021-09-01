@@ -1,7 +1,6 @@
 ---
 title: "Graceful Shutdown"
-date: 2021-06-02T00:49:55-03:00
-draft: true
+date: 2021-09-01T01:50:14-03:00
 tags: ["Go", "Kubernetes", "Istio"]
 ---
 **TL;DR:**
