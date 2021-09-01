@@ -4,6 +4,11 @@ date: 2021-06-02T00:49:55-03:00
 draft: true
 tags: ["Go", "Kubernetes", "Istio"]
 ---
+**TL;DR:**
+Este artigo aborda a importância do Graceful Shutdown nos microsserviços, 
+os sinais de desligamento (`SIGTERM`, `SIGINT` e `SIGKILL`) 
+e três visões sobre esse desafio: Go, Kubernetes e Istio.
+<!--more-->
 
 ## Introdução
 
@@ -69,7 +74,7 @@ Porém, o [Kubernetes](https://kubernetes.io/) e [Istio](https://istio.io/) poss
 
 ## Go
 
-A implementação mais comum de graceful shutdown em Go, 
+A implementação mais comum de _graceful shutdown_ em Go, 
 é usando [Goroutines](https://gobyexample.com/goroutines) e [Channels](https://gobyexample.com/channels), como o exemplo abaixo.
 
 {{< gist matheusfm 3e66745244ae7c0c888e51c3eacc59a2 "stdlib.go" >}}
@@ -98,6 +103,47 @@ está disponível no meu [GitHub](https://github.com/matheusfm/go-graceful/blob/
 {{< /admonition >}}
 
 ## Kubernetes
+
+Nos [Pods](https://kubernetes.io/docs/concepts/workloads/pods/) do Kubernetes, 
+que representam réplicas de um [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+é possível configurar um _hook_ chamado `preStop`, que é invocado antes do sinal `SIGTERM` ser enviado.
+
+Configurando um `sleep` neste _hook_, podemos ter um _graceful shutdown_, como no exemplo abaixo.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+    - name: web
+      image: nginx
+      ports:
+        - name: web
+          containerPort: 80
+      lifecycle:
+        preStop:
+          exec:
+            command: ["sleep", "15"]
+```
+
+O intervalo do `sleep` deve ser o suficiente para que a alteração de endpoint do Kubernetes seja propagada ao 
+kube-proxy, Ingress Controller, CoreDNS, etc. 
+Para mais detalhes, veja [esse artigo](https://learnk8s.io/graceful-shutdown).
+
+Por padrão, o Kubernetes espera até 30 segundos no processo de desligamento de um Pod 
+antes de forçar o encerramento do processo (`SIGKILL`, que não pode ser interceptado).
+
+{{< admonition tip >}}
+Recomendo fortemente a leitura [deste artigo](https://learnk8s.io/graceful-shutdown) para maiores detalhes 
+sobre o Graceful Shutdown no Kubernetes.
+{{< /admonition >}}
+
+{{< admonition warning >}}
+A grande desvantagem dessa abordagem é que a imagem Docker precisa ter o comando `sleep`, 
+dificultando o uso de imagens [Distroless](https://github.com/GoogleContainerTools/distroless).
+{{< /admonition >}}
 
 ## Istio
 
