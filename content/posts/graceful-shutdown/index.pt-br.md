@@ -147,11 +147,48 @@ dificultando o uso de imagens [Distroless](https://github.com/GoogleContainerToo
 
 ## Istio
 
+O Istio possui uma configuração chamada `TerminationDrainDuration` em que é possível definir uma pausa antes do desligamento do sidecar.
+
+{{< admonition info >}}
+Sidecar é um conceito comum nas implementações de Service Mesh:
+é um container que acompanha a aplicação (que também e um container) dentro do Pod do Kubernetes. 
+Assim, temos 2 containers dentro do Pod: `app + sidecar`.
+
+O sidecar é um proxy (no caso do Istio, é o [Envoy](https://www.envoyproxy.io/))
+que faz a intermediação de todo tráfego do Pod para que tenhamos todas as vantagens do Service Mesh. 
+{{< /admonition >}}
+
+Quando o proxy recebe `SIGTERM` ou `SIGINT`, ele começa a drenar as conexões, 
+impedindo novas conexões e permitindo que as conexões existentes sejam concluídas.
+
+{{< admonition tip >}}
+Lembrando que o `SIGTERM` é enviado após a execução do hook `preStop`
+{{< /admonition >}}
+
+A duração desse processo de drenagem é configurável tanto [globalmente](https://istio.io/v1.11/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig):
+
+```yaml
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  meshConfig:
+    defaultConfig:
+      terminationDrainDuration: 50s
+```
+
+quanto por workload (por Pod):
+
+```yaml
+annotations:
+  proxy.istio.io/config: '{ "terminationDrainDuration": 50s }'
+```
+
+**A duração padrão é 5 segundos**.
+
 ## Referências
 
 1. [Termination Signals](https://www.gnu.org/software/libc/manual/html_node/Termination-Signals.html)
 2. [Graceful shutdown and zero downtime deployments in Kubernetes](https://learnk8s.io/graceful-shutdown)
 3. [signal package](https://pkg.go.dev/os/signal)
-4. [ory/graceful](https://github.com/ory/graceful)
-5. [Challenges of running Istio distroless images](https://www.solo.io/blog/challenges-of-running-istio-distroless-images/)
-6. [Graceful shutdown in Go http server](https://medium.com/honestbee-tw-engineer/gracefully-shutdown-in-go-http-server-5f5e6b83da5a)
+4. [Challenges of running Istio distroless images](https://www.solo.io/blog/challenges-of-running-istio-distroless-images/)
+5. [Graceful shutdown in Go http server](https://medium.com/honestbee-tw-engineer/gracefully-shutdown-in-go-http-server-5f5e6b83da5a)
