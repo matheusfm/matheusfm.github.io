@@ -22,7 +22,7 @@ e três visões sobre esse desafio: Go, Kubernetes e Istio.">
 <meta name=application-name content="matheusfm">
 <meta name=apple-mobile-web-app-title content="matheusfm"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://matheusfm.dev/graceful-shutdown/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Graceful Shutdown","inLanguage":"pt-br","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/matheusfm.dev\/graceful-shutdown\/"},"genre":"posts","keywords":"Go, Kubernetes, Istio","wordcount":899,"url":"https:\/\/matheusfm.dev\/graceful-shutdown\/","datePublished":"2021-09-01T01:50:14-03:00","dateModified":"2021-09-01T01:50:14-03:00","publisher":{"@type":"Organization","name":"Matheus de Faria Moraes"},"author":{"@type":"Person","name":"Matheus de Faria Moraes"},"description":""}</script></head>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://matheusfm.dev/graceful-shutdown/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Graceful Shutdown","inLanguage":"pt-br","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/matheusfm.dev\/graceful-shutdown\/"},"genre":"posts","keywords":"Go, Kubernetes, Istio","wordcount":1007,"url":"https:\/\/matheusfm.dev\/graceful-shutdown\/","datePublished":"2021-09-01T01:50:14-03:00","dateModified":"2021-09-01T01:50:14-03:00","publisher":{"@type":"Organization","name":"Matheus de Faria Moraes"},"author":{"@type":"Person","name":"Matheus de Faria Moraes"},"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'dark'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'dark'==='dark')&&document.body.setAttribute('theme','dark')</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
@@ -94,7 +94,7 @@ Cancelar
 <div class=toc-content id=toc-content-auto></div>
 </div><article class="page single"><h1 class="single-title animated flipInX">Graceful Shutdown</h1><div class=post-meta>
 <div class=post-meta-line><span class=post-author><a href=http://matheusfm.dev title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>Matheus de Faria Moraes</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=01/09/2021>01/09/2021</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;899 palavras&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=01/09/2021>01/09/2021</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1007 palavras&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;5 minutos&nbsp;</div>
 </div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
@@ -109,6 +109,7 @@ Cancelar
 <li><a href=#go>Go</a></li>
 <li><a href=#kubernetes>Kubernetes</a></li>
 <li><a href=#istio>Istio</a></li>
+<li><a href=#conclusão>Conclusão</a></li>
 <li><a href=#referências>Referências</a></li>
 </ul>
 </nav></div>
@@ -321,6 +322,31 @@ impedindo novas conexões e permitindo que as conexões existentes sejam conclu�
 </span></code></pre></td></tr></table>
 </div>
 </div><p><strong>A duração padrão é 5 segundos</strong>.</p>
+<h2 id=conclusão>Conclusão</h2>
+<p>A melhor abordagem para habilitar Graceful Shutdown depende do cenário de cada projeto/sistema.</p>
+<p>Existem projetos em que:</p>
+<ul>
+<li>alterar o código dos microsserviços é muito trabalhoso;</li>
+<li>não usa Service Mesh (Istio);</li>
+<li>o uso de imagens Distroless é prioridade;</li>
+<li>não estão no Kubernetes;</li>
+<li>que estão no Kubernetes, usando Istio, e tem agilidade para alterar o código dos microsserviços.
+Nesse caso é possível conciliar mais de uma estratégia para garantir <em>zero downtime</em>.</li>
+</ul>
+<div class="details admonition question open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-question-circle fa-fw"></i>Pergunta<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div>
+<div class=details-content>
+<div class=admonition-content><p>Compartilhe nos comentários os desafios e aprendizados do seu projeto! 😉</p>
+<ul>
+<li>Qual é o cenário do seu projeto?</li>
+<li>Qual abordagem é utilizada para <em>graceful shutdown</em>?</li>
+<li>Como é a implementação na sua linguagem de programação e <em>framework</em> preferido?</li>
+</ul>
+</div>
+</div>
+</div>
 <h2 id=referências>Referências</h2>
 <ol>
 <li><a href=https://www.gnu.org/software/libc/manual/html_node/Termination-Signals.html target=_blank rel="noopener noreffer">Termination Signals</a></li>
