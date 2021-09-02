@@ -2,6 +2,10 @@
 title: "Graceful Shutdown"
 date: 2021-09-01T01:50:14-03:00
 tags: ["Go", "Kubernetes", "Istio"]
+lightgallery: true
+resources:
+- name: "featured-image"
+  src: "featured-image.jpg"
 ---
 **TL;DR:**
 Este artigo aborda a importância do Graceful Shutdown nos microsserviços, 
