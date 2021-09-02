@@ -184,6 +184,27 @@ annotations:
 
 **A duração padrão é 5 segundos**.
 
+## Conclusão
+
+A melhor abordagem para habilitar Graceful Shutdown depende do cenário de cada projeto/sistema.
+
+Existem projetos em que: 
+- alterar o código dos microsserviços é muito trabalhoso;
+- não usa Service Mesh (Istio);
+- o uso de imagens Distroless é prioridade;
+- não estão no Kubernetes;
+- que estão no Kubernetes, usando Istio, e tem agilidade para alterar o código dos microsserviços.
+  Nesse caso é possível conciliar mais de uma estratégia para garantir _zero downtime_.
+
+{{< admonition question >}}
+Compartilhe nos comentários os desafios e aprendizados do seu projeto! :wink:
+
+- Qual é o cenário do seu projeto? 
+- Qual abordagem é utilizada para _graceful shutdown_? 
+- Como é a implementação na sua linguagem de programação e _framework_ preferido?
+
+{{< /admonition >}}
+
 ## Referências
 
 1. [Termination Signals](https://www.gnu.org/software/libc/manual/html_node/Termination-Signals.html)
