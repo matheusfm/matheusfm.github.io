@@ -5,10 +5,10 @@ date: 2020-08-07T11:08:53-03:00
 
 ## About me
 Hi, my name is Matheus. 
-I'm a software engineer at [Zup](https://zup.com.br/), working as developer who creates cloud-native apps. 
+I'm a software engineer at [Getup](https://getup.io/), working as developer who creates cloud-native apps on the [UnDistro](https://undistro.io/) project.
 
 ## Interests
-Golang, Java, Kubernetes, Cloud Native and Microservices
+Golang, Kubernetes, Cloud Native and Microservices
 
 ## Talks
 I like to share my experiences and learnings about technology. 
