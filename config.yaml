@@ -149,7 +149,7 @@ permalinks:
 author:
   name: "Matheus de Faria Moraes"
   email: "matheusfaria.moraes@gmail.com"
-  link: "http://matheusfm.dev"
+  link: "https://matheusfm.dev"
 outputs:
   home:
     - "HTML"
