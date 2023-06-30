@@ -155,7 +155,7 @@ params:
 permalinks:
   posts: ":filename"
 author:
-  name: "Matheus de Faria Moraes"
+  name: "Matheus"
   email: "matheusfaria.moraes@gmail.com"
   link: "https://matheusfm.dev"
 outputs:
