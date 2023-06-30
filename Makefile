@@ -14,9 +14,8 @@ help: ## Display this help.
 ##@ Development
 
 .PHONY: init
-init: ## Init git submodules
-	git submodule init
-	git submodule update
+init: ## Update or init git submodules
+	git submodule update --init --remote
 
 .PHONY: serve
 serve: ## Serve the site
