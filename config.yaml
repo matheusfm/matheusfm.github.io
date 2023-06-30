@@ -126,6 +126,7 @@ params:
     Linkedin: "matheusfm"
     Twitter: "mfariam"
     Email: "matheusfaria.moraes@gmail.com"
+    RSS: true
   page:
     code:
       copy: true
@@ -158,6 +159,4 @@ author:
   email: "matheusfaria.moraes@gmail.com"
   link: "https://matheusfm.dev"
 outputs:
-  home:
-    - "HTML"
-    - "JSON"
+  home: ["HTML", "JSON", "RSS"]
