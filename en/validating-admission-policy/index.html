@@ -1,0 +1,437 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Standardizing enforcement of security policies: Diving deep into Kubernetes Validating Admission Policy - matheusfm</title><meta name=Description content><meta property="og:title" content="Standardizing enforcement of security policies: Diving deep into Kubernetes Validating Admission Policy"><meta property="og:description" content="Discover why Validating Admission Policy should standardize the policy enforcement in Kubernetes ecosystem.
+This article discusses benefits, motivation, and how to get started."><meta property="og:type" content="article"><meta property="og:url" content="https://matheusfm.dev/en/validating-admission-policy/"><meta property="og:image" content="https://matheusfm.dev/en/validating-admission-policy/featured-image.jpg"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-06-29T12:12:23-03:00"><meta property="article:modified_time" content="2023-06-29T12:12:23-03:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://matheusfm.dev/en/validating-admission-policy/featured-image.jpg"><meta name=twitter:title content="Standardizing enforcement of security policies: Diving deep into Kubernetes Validating Admission Policy"><meta name=twitter:description content="Discover why Validating Admission Policy should standardize the policy enforcement in Kubernetes ecosystem.
+This article discusses benefits, motivation, and how to get started."><meta name=application-name content="matheusfm"><meta name=apple-mobile-web-app-title content="matheusfm"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://matheusfm.dev/en/validating-admission-policy/><link rel=prev href=https://matheusfm.dev/en/graceful-shutdown/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Standardizing enforcement of security policies: Diving deep into Kubernetes Validating Admission Policy","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/matheusfm.dev\/en\/validating-admission-policy\/"},"image":[{"@type":"ImageObject","url":"https:\/\/matheusfm.dev\/en\/validating-admission-policy\/featured-image.jpg","width":2654,"height":1493}],"genre":"posts","keywords":"Kubernetes","wordcount":1516,"url":"https:\/\/matheusfm.dev\/en\/validating-admission-policy\/","datePublished":"2023-06-29T12:12:23-03:00","dateModified":"2023-06-29T12:12:23-03:00","publisher":{"@type":"Organization","name":"Matheus"},"author":{"@type":"Person","name":"Matheus"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"dark"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"dark"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/en/ title=matheusfm><span class=header-title-pre><i class='fa fa-terminal fa-fw'></i> </span><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/en/posts/><i class='fa fa-book fa-fw'></i> Posts </a><a class=menu-item href=/en/tags/><i class='fa fa-tags fa-fw'></i> Tags </a><a class=menu-item href=/en/about/><i class='fa fa-user fa-fw'></i> About </a><a class=menu-item href=https://github.com/matheusfm title=GitHub rel="noopener noreffer" target=_blank><i class='fab fa-github fa-fw'></i> </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item language" title="Select Language">English<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select id=language-select-desktop onchange="location=this.value"><option value=/en/validating-admission-policy/ selected>English</option></select>
+</a><span class="menu-item search" id=search-desktop><input type=text placeholder="Search titles or contents..." id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme"><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/en/ title=matheusfm><span class=header-title-pre><i class='fa fa-terminal fa-fw'></i> </span><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder="Search titles or contents..." id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/en/posts/ title><i class='fa fa-book fa-fw'></i>Posts</a><a class=menu-item href=/en/tags/ title><i class='fa fa-tags fa-fw'></i>Tags</a><a class=menu-item href=/en/about/ title><i class='fa fa-user fa-fw'></i>About</a><a class=menu-item href=https://github.com/matheusfm title=GitHub rel="noopener noreffer" target=_blank><i class='fab fa-github fa-fw'></i></a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i>
+</a><a href=javascript:void(0); class=menu-item title="Select Language">English<i class="fas fa-chevron-right fa-fw"></i>
+<select class=language-select onchange="location=this.value"><option value=/en/validating-admission-policy/ selected>English</option></select></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Standardizing enforcement of security policies: Diving deep into Kubernetes Validating Admission Policy</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://matheusfm.dev title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>Matheus</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2023-06-29>2023-06-29</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1516 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;8 minutes&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/en/validating-admission-policy/featured-image.jpg data-srcset="/en/validating-admission-policy/featured-image.jpg, /en/validating-admission-policy/featured-image.jpg 1.5x, /en/validating-admission-policy/featured-image.jpg 2x" data-sizes=auto alt=/en/validating-admission-policy/featured-image.jpg title=/en/validating-admission-policy/featured-image.jpg></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#introduction>Introduction</a></li><li><a href=#motivation>Motivation</a></li><li><a href=#getting-started-with-validating-admission-policies>Getting started with Validating Admission Policies</a></li><li><a href=#comparing-policies>Comparing policies</a></li><li><a href=#conclusion>Conclusion</a></li><li><a href=#references>References</a></li></ul></nav></div></div><div class=content id=content><p>Discover why Validating Admission Policy should standardize the policy enforcement in Kubernetes ecosystem.
+This article discusses benefits, motivation, and how to get started.</p><div class="details admonition info open"><div class="details-summary admonition-title"><i class="icon fas fa-info-circle fa-fw"></i>Info<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content>This article was originally published on <a href=https://undistro.io/blog/standardizing-enforcement-of-security-policies/ target=_blank rel="noopener noreffer">Undistro&rsquo;s blog</a>.</div></div></div><h2 id=introduction>Introduction</h2><p>Kubernetes 1.26 introduced the first alpha release of validating admission policies.</p><p>Validating admission policies offer a declarative, in-process alternative to <a href=https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#what-are-admission-webhooks target=_blank rel="noopener noreffer">validating admission webhooks</a>.
+Validation rules for a policy are declared in <a href=https://github.com/google/cel-spec target=_blank rel="noopener noreffer">Common Expression Language (CEL)</a>.</p><h2 id=motivation>Motivation</h2><p>The current approach to enforcing custom policies within Kubernetes involves use of admission webhooks.
+It is mainly done via external admission controllers in the ecosystem such as
+<a href=https://kyverno.io/ target=_blank rel="noopener noreffer">Kyverno</a> and <a href=https://open-policy-agent.github.io/gatekeeper/website/ target=_blank rel="noopener noreffer">OPA/Gatekeeper</a>.</p><p>Admission webhooks are HTTP callbacks that handle admission requests.
+There are 2 types, either validating or mutating.
+Mutating webhooks are able to modify objects before they are stored,
+whereas validating webhooks can reject requests to enforce custom policies.</p><p>The diagram below shows phases of the admission control process.</p><p><img class=lazyload src=/svg/loading.min.svg data-src=./phases.png data-srcset="./phases.png, ./phases.png 1.5x, ./phases.png 2x" data-sizes=auto alt=./phases.png title="Kubernetes admission controller phases"></p><p>While admission webhooks do offer great flexibility,
+they come with a few drawbacks when compared to in-process policy enforcement:</p><ul><li><strong>Additional infrastructure</strong>: required to host admission webhooks.</li><li><strong>Latency</strong>: requires another network hop.</li><li><strong>Less reliable</strong>: due to extra infrastructure dependencies.</li><li><strong>"<em>Failing closed or failing open</em>" dilemma</strong>: reduce the cluster availability or limit the efficacy of policy enforcement?</li><li><strong>Operationally burdensome</strong>: observability, security, and proper release/rollout/rollback plans.</li></ul><h2 id=getting-started-with-validating-admission-policies>Getting started with Validating Admission Policies</h2><p>Let&rsquo;s see how validating admission policies work.</p><p>Since this feature is in alpha stage, the <a href=https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/ target=_blank rel="noopener noreffer">feature gate</a>
+<code>ValidatingAdmissionPolicy</code> should be enabled.</p><p>We can create a Kubernetes cluster with <a href=https://kind.sigs.k8s.io/ target=_blank rel="noopener noreffer">Kind</a> providing a configuration file that
+enables the feature gate.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>kind create cluster --config kind-config.yaml
+</span></span></code></pre></td></tr></table></div></div><p>The content of <code>kind-config.yaml</code> file:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Cluster</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>kind.x-k8s.io/v1alpha4</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>featureGates</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>&#34;ValidatingAdmissionPolicy&#34;: </span><span class=kc>true</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>runtimeConfig</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>&#34;admissionregistration.k8s.io/v1alpha1&#34;: </span><span class=s2>&#34;true&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>nodes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=nt>role</span><span class=p>:</span><span class=w> </span><span class=l>control-plane</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>kindest/node:v1.27.2</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>The following command checks if the API is enabled:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>kubectl api-resources <span class=p>|</span> grep validating
+</span></span><span class=line><span class=cl>validatingadmissionpolicies                      admissionregistration.k8s.io/v1alpha1   <span class=nb>false</span>        ValidatingAdmissionPolicy
+</span></span><span class=line><span class=cl>validatingadmissionpolicybindings                admissionregistration.k8s.io/v1alpha1   <span class=nb>false</span>        ValidatingAdmissionPolicyBinding
+</span></span><span class=line><span class=cl>validatingwebhookconfigurations                  admissionregistration.k8s.io/v1         <span class=nb>false</span>        ValidatingWebhookConfiguration
+</span></span></code></pre></td></tr></table></div></div><p>Once the <code>ValidatingAdmissionPolicy</code> is enabled, we are able to create our policies with CEL expressions.</p><p>Let&rsquo;s create a policy that enforces a tag different from <code>latest</code> in Pod images.</p><p>A policy is made up of at least two resources:</p><ul><li>The <code>ValidatingAdmissionPolicy</code> describes the logic of a policy.</li><li>A <code>ValidatingAdmissionPolicyBinding</code> links the above resources together and provides scoping.</li></ul><p>Here is our policy. The description of the most important fields are listed as comments, take a look.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>admissionregistration.k8s.io/v1alpha1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ValidatingAdmissionPolicy</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>image-tag-latest</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>failurePolicy</span><span class=p>:</span><span class=w> </span><span class=l>Fail</span><span class=w> </span><span class=c># if an expression evaluates to false, the validation check is enforced according to this field</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>matchConstraints</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>resourceRules</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>apiGroups</span><span class=p>:</span><span class=w>   </span><span class=p>[</span><span class=s2>&#34;&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>apiVersions</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;v1&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>operations</span><span class=p>:</span><span class=w>  </span><span class=p>[</span><span class=s2>&#34;CREATE&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;UPDATE&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>resources</span><span class=p>:</span><span class=w>   </span><span class=p>[</span><span class=s2>&#34;pods&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>validations</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c># the field below contains a CEL expression to validate the request</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>expression</span><span class=p>:</span><span class=w> </span><span class=p>|</span><span class=sd>
+</span></span></span><span class=line><span class=cl><span class=sd>        object.spec.containers.all(container,
+</span></span></span><span class=line><span class=cl><span class=sd>          container.image.contains(&#34;:&#34;) &amp;&amp;
+</span></span></span><span class=line><span class=cl><span class=sd>          [container.image.substring(container.image.lastIndexOf(&#34;:&#34;)+1)].all(image,
+</span></span></span><span class=line><span class=cl><span class=sd>            !image.contains(&#34;/&#34;) &amp;&amp; !(image in [&#34;latest&#34;, &#34;&#34;])
+</span></span></span><span class=line><span class=cl><span class=sd>          )
+</span></span></span><span class=line><span class=cl><span class=sd>        )</span><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>message</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;Image tag &#39;latest&#39; is not allowed. Use a tag from a specific version.&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nn>---</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>admissionregistration.k8s.io/v1alpha1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ValidatingAdmissionPolicyBinding</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>image-tag-latest</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>policyName</span><span class=p>:</span><span class=w> </span><span class=l>image-tag-latest</span><span class=w> </span><span class=c># references a `ValidatingAdmissionPolicy` name</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>validationActions</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>Deny]</span><span class=w> </span><span class=c># `Deny` specifies that a validation failure results in a denied request</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>matchResources</span><span class=p>:</span><span class=w> </span>{}<span class=w> </span><span class=c># an empty `matchResources` means that all resources matched by the policy are validated by this binding</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>Now we can apply the policy:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>kubectl apply -f vap.yaml
+</span></span></code></pre></td></tr></table></div></div><p>If you try to create a Pod with an untagged image, an error will return with the message we defined:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>kubectl apply -f pod.yaml
+</span></span><span class=line><span class=cl>The pods <span class=s2>&#34;nginx&#34;</span> is invalid: : ValidatingAdmissionPolicy <span class=s1>&#39;image-tag-latest&#39;</span> with binding <span class=s1>&#39;image-tag-latest&#39;</span> denied request: Image tag <span class=s1>&#39;latest&#39;</span> is not allowed. Use a tag from a specific version.
+</span></span></code></pre></td></tr></table></div></div><p>The content of <code>pod.yaml</code> file is below.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>v1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>Pod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>nginx</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>labels</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>app</span><span class=p>:</span><span class=w> </span><span class=l>nginx</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>containers</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>nginx</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>nginx</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>imagePullPolicy</span><span class=p>:</span><span class=w> </span><span class=l>IfNotPresent</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>restartPolicy</span><span class=p>:</span><span class=w> </span><span class=l>Always</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>Different values can be substituted in the <code>image</code> field to test different cases:</p><table><thead><tr><th>Image</th><th>Expect</th></tr></thead><tbody><tr><td><code>nginx@sha256:af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305</code></td><td>pass</td></tr><tr><td><code>nginx:1.25.0</code></td><td>pass</td></tr><tr><td><code>nginx:latest</code></td><td>fail</td></tr><tr><td><code>nginx</code></td><td>fail</td></tr></tbody></table><h2 id=comparing-policies>Comparing policies</h2><p>See how the same policy is defined in external admission controllers.</p><p>Validating Admission Policy:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>admissionregistration.k8s.io/v1alpha1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ValidatingAdmissionPolicy</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>image-tag-latest</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>failurePolicy</span><span class=p>:</span><span class=w> </span><span class=l>Fail</span><span class=w> </span><span class=c># if an expression evaluates to false, the validation check is enforced according to this field</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>matchConstraints</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>resourceRules</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>apiGroups</span><span class=p>:</span><span class=w>   </span><span class=p>[</span><span class=s2>&#34;&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>apiVersions</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;v1&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>operations</span><span class=p>:</span><span class=w>  </span><span class=p>[</span><span class=s2>&#34;CREATE&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;UPDATE&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>resources</span><span class=p>:</span><span class=w>   </span><span class=p>[</span><span class=s2>&#34;pods&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>validations</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c># the field below contains a CEL expression to validate the request</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>expression</span><span class=p>:</span><span class=w> </span><span class=p>|</span><span class=sd>
+</span></span></span><span class=line><span class=cl><span class=sd>        object.spec.containers.all(container,
+</span></span></span><span class=line><span class=cl><span class=sd>          container.image.contains(&#34;:&#34;) &amp;&amp;
+</span></span></span><span class=line><span class=cl><span class=sd>          [container.image.substring(container.image.lastIndexOf(&#34;:&#34;)+1)].all(image,
+</span></span></span><span class=line><span class=cl><span class=sd>            !image.contains(&#34;/&#34;) &amp;&amp; !(image in [&#34;latest&#34;, &#34;&#34;])
+</span></span></span><span class=line><span class=cl><span class=sd>          )
+</span></span></span><span class=line><span class=cl><span class=sd>        )</span><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>message</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;Image tag &#39;latest&#39; is not allowed. Use a tag from a specific version.&#34;</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>OPA/Gatekeeper:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>templates.gatekeeper.sh/v1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ConstraintTemplate</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>k8sdisallowedtags</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>crd</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>names</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>K8sDisallowedTags</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>validation</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>openAPIV3Schema</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>type</span><span class=p>:</span><span class=w> </span><span class=l>object</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>properties</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nt>tags</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>              </span><span class=nt>type</span><span class=p>:</span><span class=w> </span><span class=l>array</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>              </span><span class=nt>description</span><span class=p>:</span><span class=w> </span><span class=l>Disallowed container image tags.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>              </span><span class=nt>items</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=nt>type</span><span class=p>:</span><span class=w> </span><span class=l>string</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>targets</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>target</span><span class=p>:</span><span class=w> </span><span class=l>admission.k8s.gatekeeper.sh</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>rego</span><span class=p>:</span><span class=w> </span><span class=p>|</span><span class=sd>
+</span></span></span><span class=line><span class=cl><span class=sd>        package k8sdisallowedtags
+</span></span></span><span class=line><span class=cl><span class=sd>
+</span></span></span><span class=line><span class=cl><span class=sd>        violation[{&#34;msg&#34;: msg}] {
+</span></span></span><span class=line><span class=cl><span class=sd>            container := input_containers[_]
+</span></span></span><span class=line><span class=cl><span class=sd>            tags := [forbid | tag = input.parameters.tags[_] ; forbid = endswith(container.image, concat(&#34;:&#34;, [&#34;&#34;, tag]))]
+</span></span></span><span class=line><span class=cl><span class=sd>            any(tags)
+</span></span></span><span class=line><span class=cl><span class=sd>            msg := sprintf(&#34;container &lt;%v&gt; uses a disallowed tag &lt;%v&gt;; disallowed tags are %v&#34;, [container.name, container.image, input.parameters.tags])
+</span></span></span><span class=line><span class=cl><span class=sd>        }
+</span></span></span><span class=line><span class=cl><span class=sd>
+</span></span></span><span class=line><span class=cl><span class=sd>        violation[{&#34;msg&#34;: msg}] {
+</span></span></span><span class=line><span class=cl><span class=sd>            container := input_containers[_]
+</span></span></span><span class=line><span class=cl><span class=sd>            tag := [contains(container.image, &#34;:&#34;)]
+</span></span></span><span class=line><span class=cl><span class=sd>            not all(tag)
+</span></span></span><span class=line><span class=cl><span class=sd>            msg := sprintf(&#34;container &lt;%v&gt; didn&#39;t specify an image tag &lt;%v&gt;&#34;, [container.name, container.image])
+</span></span></span><span class=line><span class=cl><span class=sd>        }
+</span></span></span><span class=line><span class=cl><span class=sd>
+</span></span></span><span class=line><span class=cl><span class=sd>        input_containers[c] {
+</span></span></span><span class=line><span class=cl><span class=sd>            c := input.review.object.spec.containers[_]
+</span></span></span><span class=line><span class=cl><span class=sd>        }
+</span></span></span><span class=line><span class=cl><span class=sd>        input_containers[c] {
+</span></span></span><span class=line><span class=cl><span class=sd>            c := input.review.object.spec.initContainers[_]
+</span></span></span><span class=line><span class=cl><span class=sd>        }
+</span></span></span><span class=line><span class=cl><span class=sd>        input_containers[c] {
+</span></span></span><span class=line><span class=cl><span class=sd>            c := input.review.object.spec.ephemeralContainers[_]
+</span></span></span><span class=line><span class=cl><span class=sd>        }</span><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nn>---</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>constraints.gatekeeper.sh/v1beta1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>K8sDisallowedTags</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>container-image-must-not-have-latest-tag</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>match</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>kinds</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>apiGroups</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>kinds</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;Pod&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>namespaces</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;default&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>parameters</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>tags</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;latest&#34;</span><span class=p>]</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>Kyverno:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>kyverno.io/v1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ClusterPolicy</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>disallow-latest-tag    </span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>validationFailureAction</span><span class=p>:</span><span class=w> </span><span class=l>audit</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>background</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>rules</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>require-image-tag</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>match</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>any</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>resources</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>kinds</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=l>Pod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>validate</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>message</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;An image tag is required.&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>pattern</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>containers</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;*:*&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>validate-image-tag</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>match</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>any</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>resources</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>kinds</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=l>Pod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>validate</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>message</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;Using a mutable image tag e.g. &#39;latest&#39; is not allowed.&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>pattern</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>containers</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;!*:latest&#34;</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>Kyverno with CEL (<strong>new</strong>):</p><blockquote><p>Kyverno recently has added support for CEL expressions. See the <a href=https://github.com/kyverno/kyverno/pull/7070 target=_blank rel="noopener noreffer">PR</a>.
+This is a very recent feature, and the API is subject to change. As of this post&rsquo;s writing, this feature has not yet been documented.</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>apiVersion</span><span class=p>:</span><span class=w> </span><span class=l>kyverno.io/v1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>kind</span><span class=p>:</span><span class=w> </span><span class=l>ClusterPolicy</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>metadata</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>disallow-latest-tag</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>spec</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>validationFailureAction</span><span class=p>:</span><span class=w> </span><span class=l>Enforce</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>background</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>rules</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>image-tag</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>match</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>any</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=nt>resources</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>              </span><span class=nt>kinds</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span>- <span class=l>Pod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>validate</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>cel</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>expressions</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span>- <span class=nt>expression</span><span class=p>:</span><span class=w> </span><span class=p>|</span><span class=sd>
+</span></span></span><span class=line><span class=cl><span class=sd>                object.spec.containers.all(container,
+</span></span></span><span class=line><span class=cl><span class=sd>                  ( container.image.contains(&#34;:&#34;) || container.image.contains(&#34;@&#34;) )
+</span></span></span><span class=line><span class=cl><span class=sd>                  &amp;&amp; !container.image.endsWith(&#34;:latest&#34;)
+</span></span></span><span class=line><span class=cl><span class=sd>                )</span><span class=w>                
+</span></span></span><span class=line><span class=cl><span class=w>              </span><span class=nt>message</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;Image tag &#39;latest&#39; is not allowed. Use a tag from a specific version.&#34;</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=conclusion>Conclusion</h2><p>Looking at the Kubernetes ecosystem as a whole, it is evident that there&rsquo;s a demand for opinionated policy frameworks.
+The existence of security regimes such as <a href=https://www.cisecurity.org/benchmark/kubernetes target=_blank rel="noopener noreffer">CIS Kubernetes Benchmarks</a>
+emphasizes the importance of standardized controls.</p><p>Validating Admission Policy is a policy enforcement feature that fulfills a community need and
+should be the best alternative for the vast majority of validations due to
+reduced infrastructure footprint and the simplicity of CEL.</p><p>In-process admission control has fundamental advantages over webhooks:
+it is far safer to use in a &ldquo;fail closed&rdquo; mode because it removes the network as a possible failure domain.</p><p>According to the <a href=https://github.com/kubernetes/enhancements/blob/master/keps/sig-api-machinery/3488-cel-admission-control/README.md target=_blank rel="noopener noreffer">KEP (Kubernetes Enhancement Proposal) of this feature</a>,
+it&rsquo;s not a goal currently to support mutations and to build an in-tree policy framework.
+Therefore, projects in the ecosystem should not be completely replaced when this feature is graduated.
+Instead, they should make use of these APIs&rsquo; extensibility and configurability.</p><p>One of the goals is to provide core functionality as a library and enable other tools to run the same CEL validation checks that the API server does.
+This should popularize the use of CEL for policies and checks in the Kubernetes ecosystem.</p><p>Even though still in alpha stage, we can already observe the impact of Validating Admission Policy:
+Kyverno is developing a feature which supports CEL expressions in validations,
+as can be seen in the <a href=#comparing-policies rel>comparing policies section</a>.</p><p>We should expect to see new projects emerging that use CEL in use cases beyond admissions control.
+One great example is <a href=https://github.com/undistro/marvin target=_blank rel="noopener noreffer">Marvin</a>, a CLI tool that scans Kubernetes clusters by performing CEL expressions to report potential issues.
+Marvin has 30+ built-in checks and also supports custom checks with CEL, allowing you to use virtually the same expression in both cases:
+Kubernetes <code>ValidatingAdmissionPolicy</code> (policy enforcement) and Marvin (cluster scanner).</p><h2 id=references>References</h2><ul><li><a href=https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy target=_blank rel="noopener noreffer">https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy</a></li><li><a href=https://kubernetes.io/blog/2022/12/20/validating-admission-policies-alpha target=_blank rel="noopener noreffer">https://kubernetes.io/blog/2022/12/20/validating-admission-policies-alpha</a></li><li><a href=https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers target=_blank rel="noopener noreffer">https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers</a></li><li><a href=https://github.com/kubernetes/enhancements/blob/master/keps/sig-api-machinery/3488-cel-admission-control/README.md target=_blank rel="noopener noreffer">https://github.com/kubernetes/enhancements/blob/master/keps/sig-api-machinery/3488-cel-admission-control/README.md</a></li><li><a href=https://github.com/undistro/marvin target=_blank rel="noopener noreffer">https://github.com/undistro/marvin</a></li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2023-06-29</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://matheusfm.dev/en/validating-admission-policy/ data-title="Standardizing enforcement of security policies: Diving deep into Kubernetes Validating Admission Policy" data-via=mfariam data-hashtags=Kubernetes><i class="fab fa-twitter fa-fw"></i></a><a href=javascript:void(0); title="Share on Linkedin" data-sharer=linkedin data-url=https://matheusfm.dev/en/validating-admission-policy/><i class="fab fa-linkedin fa-fw"></i></a><a href=javascript:void(0); title="Share on WhatsApp" data-sharer=whatsapp data-url=https://matheusfm.dev/en/validating-admission-policy/ data-title="Standardizing enforcement of security policies: Diving deep into Kubernetes Validating Admission Policy" data-web><i class="fab fa-whatsapp fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/en/tags/kubernetes/>Kubernetes</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/en/>Home</a></span></section></div><div class=post-nav><a href=/en/graceful-shutdown/ class=prev rel=prev title="Graceful Shutdown"><i class="fas fa-angle-left fa-fw"></i>Graceful Shutdown</a></div></div><div id=comments><div id=utterances></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://utteranc.es/>Utterances</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2020 - 2023</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://matheusfm.dev target=_blank>Matheus</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.pt.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/typeit/typeit.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:10},comment:{utterances:{darkTheme:"github-dark",issueTerm:"pathname",label:"comment",lightTheme:"github-light",repo:"matheusfm/matheusfm.github.io"}},data:{"id-1":"matheusfm.dev","id-2":"matheusfm.dev"},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{highlightTag:null,lunrIndexURL:"/en/index.json",lunrLanguageCode:"en",maxResultLength:null,noResultsFound:"No results found",snippetLength:null,type:"lunr"},typeit:{cursorChar:"|",cursorSpeed:null,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:null}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-174922167-1",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-174922167-1" async></script></body></html>
