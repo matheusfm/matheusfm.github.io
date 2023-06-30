@@ -36,14 +36,17 @@ languages:
           name: "Posts"
           url: "/posts/"
           weight: 1
+          pre: "<i class='fa fa-book fa-fw'></i>"
         - identifier: "tags"
           name: "Tags"
           url: "/tags/"
           weight: 2
+          pre: "<i class='fa fa-tags fa-fw'></i>"
         - identifier: "about"
           name: "Sobre"
           url: "/about/"
           weight: 3
+          pre: "<i class='fa fa-user fa-fw'></i>"
         - identifier: "github"
           pre: "<i class='fab fa-github fa-fw'></i>"
           url: "https://github.com/matheusfm"
@@ -74,13 +77,16 @@ languages:
           name: "Posts"
           url: "/posts/"
           weight: 1
+          pre: "<i class='fa fa-book fa-fw'></i>"
         - identifier: "tags"
           name: "Tags"
           url: "/tags/"
           weight: 2
+          pre: "<i class='fa fa-tags fa-fw'></i>"
         - identifier: "about"
           name: "About"
           url: "/about/"
+          pre: "<i class='fa fa-user fa-fw'></i>"
           weight: 3
         - identifier: "github"
           pre: "<i class='fab fa-github fa-fw'></i>"
